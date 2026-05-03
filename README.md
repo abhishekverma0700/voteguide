@@ -59,10 +59,8 @@ Because the app is a single static site, you can deploy it to any static host (G
 - If the page reloads when submitting the chat form, ensure the submit handler is attached; `e.preventDefault()` prevents default submission.
 
 ## Screenshots
-- (Placeholder) Add screenshots here showing the Timeline, Chatbot, Glossary, and Progress views.
+<img width="1901" height="1005" alt="image" src="https://github.com/user-attachments/assets/2fdaa12b-fc94-46bb-9a8c-c7147cfb40d5" />
+<img width="1910" height="1032" alt="image" src="https://github.com/user-attachments/assets/34abc9cc-87a1-4fa0-8352-8d6fe4094e77" />
+<img width="1919" height="1013" alt="image" src="https://github.com/user-attachments/assets/893bd3ab-c47b-47da-a0ad-f4ed8cbc803c" />
 
-## License
-MIT
 
----
-If you want, I can expand the chatbot knowledge base, add a downloadable chat export, or prepare a one-click deploy script for GitHub Pages. Which would you like next?
