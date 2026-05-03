@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>VoteGuide — Election Process Assistant</title>
+  <!-- Google Analytics 4 (gtag.js) - placeholder Measurement ID -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+    // explicit page_view event (config normally tracks page_view automatically)
+    gtag('event','page_view', { page_path: location.pathname });
+    // helper to track section visits
+    function trackSectionView(sectionId){
+      if(typeof gtag === 'function'){
+        gtag('event', 'section_view', { section: sectionId });
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="navbar" aria-label="Main navigation">
+      <a class="brand" href="#">VoteGuide</a>
+      <button class="nav-toggle" aria-controls="main-nav" aria-expanded="false">Menu</button>
+      <ul id="main-nav" class="nav-links">
+        <li><a href="#timeline">Timeline</a></li>
+        <li><a href="#chatbot">Chatbot</a></li>
+        <li><a href="#eligibility">Eligibility</a></li>
+        <li><a href="#glossary">Glossary</a></li>
+        <li><a href="#progress">Progress</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section id="timeline" class="section container" aria-labelledby="timeline-heading">
+      <h2 id="timeline-heading">Election Timeline</h2>
+      <p class="lead">Follow the step-by-step process of an election cycle.</p>
+      <div class="timeline-grid" role="list" aria-label="Election timeline steps">
+        <article class="timeline-step card" data-step="Voter Registration">
+          <button class="step-toggle" aria-expanded="false">Voter Registration</button>
+          <div class="step-content">
+            <p><strong>What:</strong> Citizens register to vote.</p>
+            <p><strong>Who:</strong> Election office / citizens.</p>
+            <p><strong>Deadline:</strong> Typically weeks before voting day.</p>
+          </div>
+        </article>
+
+        <article class="timeline-step card" data-step="Candidate Filing">
+          <button class="step-toggle" aria-expanded="false">Candidate Filing</button>
+          <div class="step-content">
+            <p><strong>What:</strong> Candidates submit nominations and paperwork.</p>
+            <p><strong>Who:</strong> Political parties and independent candidates.</p>
+            <p><strong>Deadline:</strong> Fixed by election schedule.</p>
+          </div>
+        </article>
+
+        <article class="timeline-step card" data-step="Campaigning">
+          <button class="step-toggle" aria-expanded="false">Campaigning</button>
+          <div class="step-content">
+            <p><strong>What:</strong> Parties/ candidates present platforms.</p>
+            <p><strong>Who:</strong> Candidates, parties, media.</p>
+            <p><strong>Note:</strong> Model Code of Conduct applies from announcement.</p>
+          </div>
+        </article>
+
+        <article class="timeline-step card" data-step="Voting Day">
+          <button class="step-toggle" aria-expanded="false">Voting Day</button>
+          <div class="step-content">
+            <p><strong>What:</strong> Voters cast their ballots at polling stations.</p>
+            <p><strong>Who:</strong> Registered voters, polling staff.</p>
+            <p><strong>Date:</strong> Announced by the election commission.</p>
+          </div>
+        </article>
+
+        <article class="timeline-step card" data-step="Counting">
+          <button class="step-toggle" aria-expanded="false">Counting</button>
+          <div class="step-content">
+            <p><strong>What:</strong> Votes are tallied and verified.</p>
+            <p><strong>Who:</strong> Election officials, observers.</p>
+            <p><strong>When:</strong> Immediately after polling closes.</p>
+          </div>
+        </article>
+
+        <article class="timeline-step card" data-step="Results">
+          <button class="step-toggle" aria-expanded="false">Results</button>
+          <div class="step-content">
+            <p><strong>What:</strong> Final outcomes are published.</p>
+            <p><strong>Who:</strong> Election commission.</p>
+            <p><strong>After:</strong> Certification and possible challenges.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="chatbot" class="section container" aria-labelledby="chatbot-heading">
+      <h2 id="chatbot-heading">Smart Chatbot</h2>
+      <div class="chat-layout">
+        <aside class="quick-questions card" aria-label="Common questions">
+          <h3>Quick Questions</h3>
+          <div class="quick-buttons" aria-hidden="false">
+            <button class="quick-btn">How do I register to vote?</button>
+            <button class="quick-btn">What ID do I need at polling booth?</button>
+            <button class="quick-btn">What is EVM?</button>
+            <button class="quick-btn">When is the last date to register?</button>
+            <button class="quick-btn">How are votes counted?</button>
+            <button class="quick-btn">What is NOTA?</button>
+          </div>
+        </aside>
+
+        <section class="chatcard card" aria-label="Chatbot interface">
+          <div class="chat-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <h3 style="margin:0">Assistant</h3>
+            <div>
+              <button id="clear-chat" class="quick-btn" type="button">Clear</button>
+            </div>
+          </div>
+          <div class="messages" id="messages" role="log" aria-live="polite"></div>
+          <form id="chat-form" class="chat-form" aria-label="Chat input">
+            <input id="chat-input" type="text" placeholder="Ask about voting..." aria-label="Chat question" autocomplete="off" />
+            <button type="submit" aria-label="Send message">Send</button>
+          </form>
+        </section>
+      </div>
+    </section>
+
+    <section id="eligibility" class="section container" aria-labelledby="eligibility-heading">
+      <h2 id="eligibility-heading">Voter Eligibility Checker</h2>
+      <div class="card eligibility-card">
+        <form id="eligibility-form" aria-label="Eligibility form">
+          <label for="age">Your age</label>
+          <input id="age" type="number" min="0" placeholder="e.g. 18" aria-label="Age input">
+
+          <label for="citizenship">Are you a citizen?</label>
+          <select id="citizenship" aria-label="Citizenship select">
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+            <option value="dual">Dual / Other</option>
+          </select>
+
+          <div id="eligibility-result" class="result" aria-live="polite"></div>
+        </form>
+      </div>
+    </section>
+
+    <section id="glossary" class="section container" aria-labelledby="glossary-heading">
+      <h2 id="glossary-heading">Election Glossary</h2>
+      <div class="card glossary-card">
+        <input id="glossary-search" type="search" placeholder="Search terms..." aria-label="Search glossary">
+        <ul id="glossary-list" class="glossary-list" aria-live="polite"></ul>
+      </div>
+    </section>
+
+    <section id="progress" class="section container" aria-labelledby="progress-heading">
+      <h2 id="progress-heading">How Ready Are You?</h2>
+      <div class="card quiz-card">
+        <div id="quiz-questions"></div>
+        <div class="progress-row">
+          <progress id="readiness-progress" value="0" max="100"></progress>
+          <div id="progress-percent">0%</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>VoteGuide — a simple offline assistant for first-time voters.</p>
+    </div>
+  </footer>
+
+  <script src="assets/script.js" defer></script>
+  <script src="tests/tests.js" defer></script>
+</body>
+</html>
