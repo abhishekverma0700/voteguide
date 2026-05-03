@@ -16,6 +16,30 @@ const botResponses = {
   "can i change vote after casting?": "Generally no — once a ballot or EVM selection is cast it's final. Follow polling staff instructions carefully.",
 };
 
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const analytics = firebase.analytics();
+
+let firebaseDb = db;
+function initFirebase(){
+  return firebaseDb;
+}
+
+function logToFirestore(collection, payload){
+  try{
+    if(!firebaseDb) return;
+    const col = firebaseDb.collection(collection);
+    // add server timestamp when available
+    const data = Object.assign({}, payload, { createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+    col.add(data).catch(()=>{});
+  }catch(e){/* ignore */}
+}
+
+function safeGtagEvent(name, params){
+  try{ if(typeof gtag === 'function') gtag('event', name, params || {}); }catch(e){}
+}
+
+
 function qs(selector, root = document) { return root.querySelector(selector); }
 function qsa(selector, root = document) { return Array.from(root.querySelectorAll(selector)); }
 
@@ -31,6 +55,10 @@ function initTimeline(){
       } else {
         step.querySelector('.step-content').style.maxHeight = '';
       }
+      // analytics + logging for timeline clicks
+      const stepName = step.dataset.step || step.querySelector('.step-toggle')?.textContent?.trim();
+      safeGtagEvent('timeline_step_clicked', { step: stepName });
+      try{ logToFirestore('timelineLogs', { step: stepName }); }catch(e){}
     });
   });
 }
@@ -106,6 +134,9 @@ function initChatbot(){
 function sendUserMessage(text){
   appendMessage(text, 'user');
   persistChat('user', text);
+  // log chatbot question to Firestore and GA
+  try{ logToFirestore('chatLogs', { question: text }); }catch(e){}
+  safeGtagEvent('chatbot_question_asked', { question: (text||'').slice(0,200) });
   // simulate thinking
   setTimeout(()=>{
     const reply = getBotReply(text);
@@ -154,12 +185,19 @@ function initEligibilityChecker(){
     if(age >= 18 && citizen === 'yes'){
       result.textContent = 'You are likely eligible to vote. Next: register, check your polling station, and prepare ID.';
       result.className = 'result ok';
+      // log usage and GA
+      try{ logToFirestore('usageLogs', { feature: 'eligibility', age, citizen, eligible:true }); }catch(e){}
+      safeGtagEvent('eligibility_checked', { age, citizen, eligible:true });
     } else if(age >= 18 && citizen !== 'yes'){
       result.textContent = 'Age meets requirement, but citizenship status may affect eligibility. Check local rules.';
       result.className = 'result no';
+      try{ logToFirestore('usageLogs', { feature: 'eligibility', age, citizen, eligible:false }); }catch(e){}
+      safeGtagEvent('eligibility_checked', { age, citizen, eligible:false });
     } else {
       result.textContent = 'Not eligible yet. You must reach the required voting age. Consider civic engagement activities until then.';
       result.className = 'result no';
+      try{ logToFirestore('usageLogs', { feature: 'eligibility', age, citizen, eligible:false }); }catch(e){}
+      safeGtagEvent('eligibility_checked', { age, citizen, eligible:false });
     }
   }
 
@@ -208,6 +246,9 @@ function initGlossary(){
     const q = input.value.trim().toLowerCase();
     if(!q){ render(terms); return; }
     render(terms.filter(t => t.term.toLowerCase().includes(q) || t.def.toLowerCase().includes(q)));
+    // log glossary search and GA
+    try{ logToFirestore('searchLogs', { term: input.value.trim() }); }catch(e){}
+    safeGtagEvent('glossary_searched', { term: input.value.trim() });
   });
 
   render(terms);
@@ -276,6 +317,8 @@ function initNavbarObserver(){
 }
 
 document.addEventListener('DOMContentLoaded', ()=>{
+  // initialize firebase (safe no-op if placeholders remain)
+  initFirebase();
   initTimeline();
   initChatbot();
   initEligibilityChecker();
