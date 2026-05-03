@@ -15,11 +15,6 @@ VoteGuide is a compact, offline-friendly web assistant that helps first-time vot
 1. Clone or download the repository.
 2. Open `index.html` in your browser. No build step or server required.
 
-## Local Firebase Config
-- `config.js` is ignored by Git and should be kept local.
-- Put your Firebase credentials in `config.js` at the project root.
-- The app loads `config.js` before `assets/script.js`, so the global `firebaseConfig` is available when Firebase initializes.
-
 ## Project Structure
 ```
 project-root/

@@ -16,6 +16,16 @@ const botResponses = {
   "can i change vote after casting?": "Generally no — once a ballot or EVM selection is cast it's final. Follow polling staff instructions carefully.",
 };
 
+const firebaseConfig = {
+  apiKey: "AIzaSyBk4EmfVynMbf_fKrPMezM_W3TyGTzYaBw",
+  authDomain: "voteguide-ff932.firebaseapp.com",
+  projectId: "voteguide-ff932",
+  storageBucket: "voteguide-ff932.firebasestorage.app",
+  messagingSenderId: "147916197443",
+  appId: "1:147916197443:web:d2851b124c7f934c508ef6",
+  measurementId: "G-PF58E69WNB"
+};
+
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const analytics = firebase.analytics();
